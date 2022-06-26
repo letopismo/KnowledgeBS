@@ -1,0 +1,77 @@
+https://unix.stackexchange.com/questions/224992 
+
+
+The best place to put system unit files: /etc/systemd/system Just be sure to add a target under the [Install] section, read "How does it know?" for details. UPDATE: /usr/local/lib/systemd/system is another option, read "Gray Area" for details."
+
+The best place to put user unit files: /etc/systemd/user or $HOME/.config/systemd/user but it depends on permissions and the situation.
+
+The truth is that systemd units (or as the intro sentence calls them, "unit configurations") can go anywhere—provided you are willing to make manual symlinks and you are aware of the caveats. It makes life easier to put the unit where systemctl daemon-reload can find it for some good reasons:
+
+Using a standard location means that systemd generators will find them and make them easy to enable at boot with systemctl enable. This is because your unit will automatically be added to a unit dependency tree (a unit cache).
+You do not need to think about permissions, because only the right privileged users can write to the designated areas.
+How does it know?
+And how exactly does systemctl enable know where to create the symlink? You hard code it within the unit itself under the [install] section. Usually there is a line like
+
+[Install]
+WantedBy = multi-user.target
+that corresponds to a predefined place on the filesystem. This way, systemctl knows that this unit is dependent on a group of unit files called multi-user.target ("target" is the term used to designate unit dependency groups. You can list all groups with systemctl list-units --type target). The group of unit files to be loaded with a target is put in a targetname.target.wants directory. This is just a directory full of symlinks (or the real thing). If your [Install] section says it is WantedBy the multi-user.target, but if a symlink to it does not exist in the multi-user.target.wants directory, then it will not load. When the systemd unit generators add your unit file to the dependency tree cache at boot (you can manually trigger generators with systemctl daemon-reload), it automatically knows where to put the symlink—in this case in the directory /etc/systemd/system/multi-user.target.wants/ should you enable it.
+
+Key Points in the Manual:
+Additional units might be loaded into systemd ("linked") from directories not on the unit load path. See the link command for systemctl(1).
+
+Under systemctl, look for Unit File Commands
+
+Unit File Load Path
+Please read and understand the first sentence in the following quote from man systemd.unit (because it implies that all of the paths I mention here may not apply to you if your systemd was compiled with different paths):
+
+Unit files are loaded from a set of paths determined during compilation, described in the two tables below. Unit files found in directories listed earlier override files with the same name in directories lower in the list.
+
+When the variable $SYSTEMD_UNIT_PATH is set, the contents of this variable overrides the unit load path. If $SYSTEMD_UNIT_PATH ends with an empty component (":"), the usual unit load path will be appended to the contents of the variable.
+
+Table 1 and Table 2 from man systemd.unit are good.
+
+Load paths when running in system mode (--system).
+/etc/systemd/system Local configuration
+/run/systemd/system Runtime units
+/usr/lib/systemd/system Units of installed packages (or /lib/systemd/system in some cases, read man systemd.unit)
+Load path when running in user mode (--user)
+There is a difference between per user units and all/global users units.
+
+User-dependent
+$XDG_CONFIG_HOME/systemd/user User configuration (only used when $XDG_CONFIG_HOME is set)
+
+$HOME/.config/systemd/user User configuration (only used when $XDG_CONFIG_HOME is not set)
+
+$XDG_RUNTIME_DIR/systemd/user Runtime units (only used when $XDG_RUNTIME_DIR is set)
+
+$XDG_DATA_HOME/systemd/user Units of packages that have been installed in the home directory (only used when $XDG_DATA_HOME is set)
+
+$HOME/.local/share/systemd/user Units of packages that have been installed in the home directory (only used when $XDG_DATA_HOME is not set)
+
+--global (all users)
+Units that apply to all users--meaning owned by each user, too. So each user can stop these services even if an administrator enables them at boot.
+
+/etc/systemd/user Local configuration for all users (systemctl --global enable userunit.service)
+/usr/lib/systemd/user Units of packages that have been installed system-wide for all users (or /lib/systemd/system in some cases, read man systemd.unit)
+/run/systemd/user Runtime units
+Gray Area
+On the one hand, the File Hierarchy Standard (also man file-hierarchy) specifies that /etc is for local configurations that do not execute binaries. On the other hand it specifies that /usr/local/ "is for use by the system administrator when installing software locally". You could also argue (if not just for the purpose of organization) that all system unit files should go under /usr/local/lib/systemd/system, but this is intended for unit files that are part of "software" not from a package manager. The corresponding systemd user units that are system-wide could go under /usr/local/lib/systemd/user.
+
+Transient Unit
+Another forgotten place is nowhere at all! Perhaps a lesser-known program is systemd-run. You can use it to run transient units on the fly. see man systemd-run.
+
+For example, to schedule a reboot tomorrow morning at 4 a.m. (you might need --force to ensure a reboot happens):
+
+systemd-run -u restart --description="Restarts machine" --on-calendar="2020-12-18 04:00:00" systemctl --force reboot
+This will yield a transient unit file restart.service and a corresponding timer (because of the --on-calendar, (and indicated by transient=yes in the resulting transient unit definition).
+
+/run/systemd/transient/restart.service
+
+# This is a transient unit file, created programmatically via the systemd API. Do not edit.
+[Unit]
+Description=Restarts machine
+
+[Service]
+ExecStart=
+ExecStart="/usr/bin/systemctl" "--force" "reboot"
+Note that there is also the more dangerous double force option --force --force, which tells the kernel to halt immediately (and, if you do not know what you're doing, unsafely, because it is almost equivalent to cutting the power).

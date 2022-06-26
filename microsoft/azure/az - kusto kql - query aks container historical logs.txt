@@ -1,0 +1,196 @@
+goto azure.portal.com =>
+                    kubernetes services: select service =>
+                        logs => either select from template or use empty editor
+                        
+                        
+I use "List Container Logs per Namespace" as a template
+
+// List container logs per namespace
+// View container logs from all the namespaces in the cluster
+ContainerLog
+| where TimeGenerated > startofday(ago(2d))
+| where TimeGenerated < startofday(ago(1d))
+| join(
+ContainerInventory
+| where TimeGenerated > startofday(ago(2d))
+| where TimeGenerated < startofday(ago(1d))
+| where ContainerHostname contains 'myservice'
+| distinct Computer, ContainerID, ContainerHostname
+) // KubePodInventory contains namespace info
+on Computer, ContainerID
+| project TimeGenerated, ContainerID, ContainerHostname, LogEntrySource, LogEntry
+
+Remvoe distinct keyword as it is get only 1 log per tuple:
+Computer, ContainerID, ContainerHostname
+
+
+after 1st iteration:
+
+// List container logs per namespace
+// View container logs from all the namespaces in the cluster
+ContainerLog
+| where TimeGenerated > startofday(ago(2d))
+| where TimeGenerated < startofday(ago(1d))
+| join(
+ContainerInventory
+| where TimeGenerated > startofday(ago(2d))
+| where TimeGenerated < startofday(ago(1d))
+| where ContainerHostname contains 'myservice'
+) // KubePodInventory contains namespace info
+on Computer, ContainerID
+| project TimeGenerated, ContainerID, ContainerHostname, LogEntrySource, LogEntry
+
+
+2nd iteration:
+
+using between operation ( https://docs.microsoft.com/en-use/azure/data-explorer/kusto/query/betweenoperator )
+
+// List container logs per namespace
+// View container logs from all the namespaces in the cluster
+ContainerLog
+| where TimeGenerated between (ago(3d) .. ago(2d))
+| join(
+ContainerInventory
+| where TimeGenerated between (ago(3d) .. ago(2d))
+| where ContainerHostname contains 'myservice'
+) // KubePodInventory contains namespace info
+on Computer, ContainerID
+| project TimeGenerated, ContainerID, ContainerHostname, LogEntrySource, LogEntry
+
+3rd iteration:
+removing display of 
+* LogEntrySOurce (as it is always stdout) 
+* ContainerID as it is internal kubernetes hash:
+
+// List container logs per namespace
+// View container logs from all the namespaces in the cluster
+ContainerLog
+| where TimeGenerated between (ago(3d) .. ago(2d))
+| join(
+ContainerInventory
+| where TimeGenerated between (ago(3d) .. ago(2d))
+| where ContainerHostname contains 'myservice'
+) // KubePodInventory contains namespace info
+on Computer, ContainerID
+| project TimeGenerated, ContainerHostname, LogEntry
+
+4 iteration:
+Sort logs by time:
+
+// List container logs per namespace
+// View container logs from all the namespaces in the cluster
+ContainerLog
+| where TimeGenerated between (ago(3d) .. ago(2d))
+| join(
+ContainerInventory
+| where TimeGenerated between (ago(3d) .. ago(2d))
+| where ContainerHostname contains 'myservice'
+) // KubePodInventory contains namespace info
+on Computer, ContainerID
+| project TimeGenerated, ContainerHostname, LogEntry
+| order by TimeGenerated # desc / asc
+
+ref: https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/orderoperator
+
+5 iteration:
+
+summarize (aggreation on logs params)
+T | summarize [SummarizeParameters] [[Column =] Aggregation [, ...]] [by [Column =] GroupExpression [, ...]]
+
+// List container logs per namespace
+// View container logs from all the namespaces in the cluster
+ContainerLog
+| where TimeGenerated between (ago(3d) .. now())
+| join(
+ContainerInventory
+| where TimeGenerated between (ago(3d) .. now())
+| where ContainerHostname contains 'myservice'
+) // KubePodInventory contains namespace info
+on Computer, ContainerID
+| project TimeGenerated, ContainerHostname, LogEntry, LogEntrySource
+| summarize count() by Day=startofday(TimeGenerated), LogEntrySource
+
+get the logs count for the last 3 days (count for error and stdout)
+
+ref: https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/summarizeoperator
+
+Pivot tables
+
+A. Graphic
+
+when request results available:
+
+unfold column side bar at the right side and drag and drop appropriate column header to
+Row Groups (say ContainerHostname)
+
+B. pivotplugin
+
+ContainerLog
+| where TimeGenerated between (ago(3d) .. ago(2d))
+| join(
+ContainerInventory
+| where TimeGenerated between (ago(3d) .. ago(2d))
+| where ContainerHostname contains 'myservice'
+) // KubePodInventory contains namespace info
+on Computer, ContainerID
+| project TimeGenerated, ContainerHostname, LogEntry
+| evaluate pivot(ContainerHostname)
+
+ref: https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/pivotplugin
+
+
+Get logs form all containers in a namespace from last hour
+
+let startTime = ago(1h);
+let namespace = 'mynamespace';
+KubePodInventory
+| where TimeGenerated > startTime and Namespace == namespace
+| distinct Name, Namespace, ContainerID
+| join kind=innerunique ( Container | where TimeGenerated > startTime ) on ContainerID
+| project ContainerID, TimeGenerated, Name, LogEntry
+| sort by TimeGenerated desc
+
+with vars:
+
+let varStartDate = datetime(2022-05-27);
+let varEndDate = datetime(2022-06-01);
+let varServicename = 'myservice'
+ContainerLog
+| where TimeGenerated between (varStartDate .. varEndDate)
+| join(
+ContainerInventory
+| where TimeGenerated between (varStartDate .. varEndDate)
+| where ContainerHostname contains varServicename
+) // KubePodInventory contains namespace info
+on Computer, ContainerID
+| project TimeGenerated, ContainerHostname, LogEntry
+| evaluate pivot(ContainerHostname)
+
+
+# Particular AKS container logs
+
+ContainerLog
+| where ContainerID == 'er2324t3tt3'
+| where LogEntry !contains_cs "DEBUG"
+| project TimeGenerated, ContainerID, LogEntry
+sort by TimeGenerated desc
+| where LogEntry contains "user-agent"
+
+# grep multiple error keywords for pod named in one hour after deployment:
+
+let varStartDate = ago(1h);
+let varEndDate = now();
+let varServicename = 'myservice';
+let varlogsToQuery = pack_array("err", "issue")
+let containerIDs =
+ContainerLog
+| where ContainerHostname startswith varServicename
+| where TimeGenerated between (varStartDate .. varEndDate)
+| distinct ContainerID;
+ContainerLog
+ContainerInventory
+| where TimeGenerated between (varStartDate .. varEndDate)
+| where LogEntry ahs_any (varlogsToQuery)
+| where ContainerID in (containerIDs)
+| project TimeGenerated, ContainerHostname, LogEntry
+

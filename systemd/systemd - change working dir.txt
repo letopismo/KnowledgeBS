@@ -1,0 +1,26 @@
+https://askubuntu.com/questions/1063153/systemd-service-working-directory-not-change-the-directory
+https://www.freedesktop.org/software/systemd/man/systemd.exec.html#WorkingDirectory=
+
+Only superuser can "chroot".
+Why did you want to add "chroot /jail" to a user profile, what do you intend to do with that command?
+
+
+
+[Unit]
+Description=test
+
+[Service]
+RootDirectory=/home/alexor2
+ExecStart=/somescript.sh
+
+Restart=always
+RestartSec=10
+
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=autodeploy
+
+Environment=NODE_ENV=production PORT=1494
+
+[Install]
+WantedBy=multi-user.target 

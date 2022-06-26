@@ -1,0 +1,4 @@
+https://www.reddit.com/r/kde/comments/oesvog/is_there_a_way_to_enable_doubleclick_to_open/
+System settings > Workspace Behavior > Click Behavior
+
+Double click to open files and folders

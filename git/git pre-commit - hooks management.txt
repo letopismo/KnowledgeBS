@@ -1,0 +1,5 @@
+https://pre-commit.com/
+https://github.com/pre-commit/pre-commit/issues/795
+
+https://medium.com/@ripoche.b/using-global-pre-commit-hook-to-prevent-committing-unwanted-code-edbbf957ad12
+https://towardsdatascience.com/getting-started-with-python-pre-commit-hooks-28be2b2d09d5

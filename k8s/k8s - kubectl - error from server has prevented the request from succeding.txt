@@ -1,0 +1,40 @@
+error during
+
+$ kubectl get pods -n mynamespace
+Error from server (InternalError): an error on the server ("") has prevented the request from succeeding
+
+when I run with debug flag:
+
+```
+$ kubectl version --v=7
+.... Got a Retry-After 1s response for attempt 1 to htttpsL/kubernetes.docker.internal:6443/version?timeout=32s
+```
+
+
+debug verbosity flag
+ref: https://stackoverflow.swissbank.com/questions/39868
+ref: https://wesley.sh/solving-kubectl-error-from-server-interalerror-an-error-on-the-server-has-prevented-the-request-from-succeeding/
+
+Rootcause:
+wrong data in env:KUBECONFIG
+
+so check what we have in kubeconfig (default $HOME/.kube/config:
+$ less $KUBECONFIG
+and kubectl
+$ kubectl config view
+
+remove old KUBECONFIG
+mv $KUBECONFIG{,.bak}
+
+and refresh creds
+
+az aks get-credentials -g your-rg -n your-cluster-name --overwrite-existing -f $KUBECONFIG
+
+ref: https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/
+ref: https://docs.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest#az-aks-get-credentials
+ref: https://github.com/Azure/azure-cli/issues/22321
+
+--file -f
+Kubernetes configuration file to update. Use "-" to print YAML to stdout instead.
+
+default value: ~/.kube/config

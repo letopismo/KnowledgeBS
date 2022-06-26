@@ -1,0 +1,12 @@
+https://unix.stackexchange.com/questions/9600/
+
+You can use Alt+u to remove the highlight on last search results.
+You can highlight them again with Alt+u, it's a toggle.
+
+Switching off the highlight does not switch off the status column, showing marks on each line containing a match, if the column is enabled using options -J or --status-column or keys -J.
+
+To hide the status column, use -+J.
+
+To show the status column, use -J.
+
+(Technically, Alt+u it's equivalent to ESCu on terminal level - that is why the Alt-key is not mentioned in the man page.)

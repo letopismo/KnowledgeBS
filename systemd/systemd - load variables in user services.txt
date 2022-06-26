@@ -1,0 +1,42 @@
+https://unix.stackexchange.com/questions/588961/with-systemd-should-environmental-variables-ever-be-declared-in-profile-or#
+
+The files serve different purposes, which remain complementary:
+
+environment.d defines variables for systemd user services;
+.bashrc, if it defines variables, defines them for any interactive, non-login instance of Bash;
+.profile, if it defines variables, defines them for any interactive, login instance of Bash (and other shells).
+Thus setting variables in .bashrc and/or .profile is guaranteed to set them in any corresponding shell instance. Setting variables in environment.d files is guaranteed to set them in any corresponding user service instance, which might include shells, but might not (and there might be other intervening layers, see sshd).
+
+Another difference I see is that changing .bashrc or .profile will produce effects in any shell started thereafter; changing environment.d will only take effect when the user session and the relevant services are reloaded or restarted.
+
+So in debian location of envioronment.d is as follows:
+ref: https://manpages.debian.org/experimental/systemd/environment.d.5.en.html
+
+NAME
+environment.d - Definition of user service environment
+
+SYNOPSIS
+~/.config/environment.d/*.conf
+
+/etc/environment.d/*.conf
+
+/run/environment.d/*.conf
+
+/usr/lib/environment.d/*.conf
+
+/etc/environment
+
+DESCRIPTION
+Configuration files in the environment.d/ directories contain lists of environment variable assignments for services started by the systemd user instance. systemd-environment-d-generator(8) parses them and updates the environment exported by the systemd user instance. See below for an discussion of which processes inherit those variables.
+
+It is recommended to use numerical prefixes for file names to simplify ordering.
+
+For backwards compatibility, a symlink to /etc/environment is installed, so this file is also parsed.
+
+
+
+verification vars are loaded:
+ref: https://unix.stackexchange.com/questions/563287/how-do-i-show-the-environment-variables-of-a-systemd-unit
+
+If your service is running, you can use systemctl status <name>.service to identify the PID(s) of the service process(es),
+and then use sudo strings /proc/<PID>/environ to look at the actual environment of the process.

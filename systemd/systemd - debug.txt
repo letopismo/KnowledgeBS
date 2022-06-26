@@ -1,0 +1,29 @@
+$ sudo journalctl
+...s
+Configuration file /home/alexor2/.config/systemd/user/sample.service is marked executable. Please remove executable permission bits. Proceeding anyway.
+cze 03 21:16:17 alexor2-pc systemd[651]: sample.service: Service has Restart= setting other than no, which isn't allowed for Type=oneshot services. Refusing.
+ 
+or
+
+sudo journalctl  -xe
+
+...
+The unit UNIT has successfully entered the 'dead' state.
+cze 03 21:31:13 alexor2-pc systemd[653]: Started Service to commit changes to remote git repo.
+-- Subject: A start job for unit UNIT has finished successfully
+-- Defined-By: systemd
+-- Support: https://www.debian.org/support
+-- 
+-- A start job for unit UNIT has finished successfully.
+-- 
+-- The job identifier is 59.
+
+
+
+~/Documents/KnowledgeBase$ systemd-analyze --user  verify ~/.config/systemd/user/monitor_file.service 
+/home/alexor2/.config/systemd/user/monitor_file.service:4: Unknown lvalue 'ExecStart' in section 'Unit', ignoring
+/home/alexor2/.config/systemd/user/monitor_file.service:5: Unknown section 'Path'. Ignoring.
+monitor_file.service: Service has no ExecStart=, ExecStop=, or SuccessAction=. Refusing.
+Unit monitor_file.service has a bad unit file setting.
+
+ref: https://unix.stackexchange.com/questions/468742/finding-bad-systemctl-definitions

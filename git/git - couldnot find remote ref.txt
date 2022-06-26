@@ -1,0 +1,12 @@
+git - 
+
+git pull
+
+fatal: Couldn't find remote ref refs/heads/my-branch
+
+remove reference of branch my-branch in .git-config
+
+$ vim .git/config
+
+fetch = +refs/heads/my-branch:refs/remote/origin/my-branch4
+

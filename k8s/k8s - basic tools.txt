@@ -1,0 +1,3 @@
+k8s - install tools 
+
+kubernetes.io/docs/tasks/tools/#install-kubectl-binary-using-curl

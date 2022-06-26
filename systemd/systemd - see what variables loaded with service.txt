@@ -1,0 +1,5 @@
+ 
+ref: https://unix.stackexchange.com/questions/563287/how-do-i-show-the-environment-variables-of-a-systemd-unit
+
+If your service is running, you can use systemctl status <name>.service to identify the PID(s) of the service process(es),
+and then use sudo strings /proc/<PID>/environ to look at the actual environment of the process.

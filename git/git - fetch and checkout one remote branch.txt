@@ -1,0 +1,30 @@
+git clone --single-branch
+
+- option to limit clining to a single branch; tags that do not point into the history of the branch are not fetched.
+
+Git actually allows you to clone only one branch, for example:
+
+git clone -b mybranch --single-branch git://sub.domain.com/repo.git
+
+ref: stackoverflow.com/questions/4811434
+
+
+how to clone other branches?
+
+you can tell git to pull all branches like this:
+
+git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+git fetch origin
+
+if you want to add a single branch, you can do the following:
+
+git remote set-branches --add origin [other-remote-branch]
+git fetch origin [remote-branch]:[local-branch]
+
+This  adds multiple fetch = lines to .git/config, very handy when you want to switch between two branches on the remote but not fetch a whole bunch of other branches.
+
+you can also use wildcard for [remote-branch], e.g.
+
+git remote set-branches --add origin release-1.*
+git fetch 
+git checkout release-1.5

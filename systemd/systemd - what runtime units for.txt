@@ -1,0 +1,7 @@
+https://www.man7.org/linux/man-pages/man1/systemctl.1.html
+
+From reading the manual here it appears that runtime unit files are simply another type of systemd configuration file, for a given process.
+
+Also, they are generated at runtime and deleted upon exiting the process.
+
+If it helps, search "run" on that page and read all the entries. From there, it is easy to reach the same conclusion.

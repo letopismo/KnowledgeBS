@@ -1,0 +1,9 @@
+docs.microsoft.com/en-us/azure/azure-portal/set-preferences
+Go to Filter (located in the right upper corner looks like menzurka):
+
+Appearance + Startup Views => 
+        Appearance =>
+                    Menu behavior: Docked
+                    Theme: blue
+        Startup views =>
+                    Startup page: dashboard

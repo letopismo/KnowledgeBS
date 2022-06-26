@@ -1,0 +1,5 @@
+lsb_release -cs
+main
+
+use in:
+echo "deb [arch-amed64] https://packages.micrsofot.com/repos/azure-cli/ $(lsb_release -cs) main" > /etc/apt/sources.list.d/azure-cli.list

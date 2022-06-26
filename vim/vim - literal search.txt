@@ -1,0 +1,18 @@
+https://stackoverflow.com/questions/1550734
+
+Depending on the exact string you're searching, the \V prefix will probably do the trick.
+See :help \V:
+
+after:    \v       \m       \M       \V         matches ~
+                'magic' 'nomagic'    
+          $        $        $        \$         matches end-of-line
+          .        .        \.       \.         matches any character
+          *        *        \*       \*         any number of the previous atom
+          ()       \(\)     \(\)     \(\)       grouping into an atom
+          |        \|       \|       \|         separating alternatives
+          \a       \a       \a       \a         alphabetic character
+          \\       \\       \\       \\         literal backslash
+          \.       \.       .        .          literal dot
+          \{       {        {        {          literal '{'
+          a        a        a        a          literal 'a'
+So if I have a string hello.*$world, I can use the command /\V.*$ to find just .*$ -- the only part of the string that should need escaping is another backslash, but you can still do grouping, etc., by escaping the special symbol.

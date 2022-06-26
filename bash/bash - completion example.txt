@@ -1,0 +1,31 @@
+https://github.com/tw-yshuang/Git_SSH-Account_Switch/blob/main/git-acc.sh#L248
+local function _git-acc(){
+  local function _acc(){
+    local users_info=$(cat $HOME/.gitacc | grep -n '\[.*\]')
+    local accs_line=$(echo $users_info | cut -f1 -d ':')
+    local accnames=$(echo $users_info | cut -d '[' -f2 | cut -d ']' -f1)
+    echo "${accnames[*]}" | tr ' ' '\n'
+    unset users_info accs_line accnames
+  }
+
+  # refer to https://github.com/iridakos/bash-completion-tutorial/blob/master/dothis-completion.bash
+  if [ "${#COMP_WORDS[*]}" -gt 2 ]; then
+    return
+  fi
+
+  local IFS=$' ' # keyword space
+  local suggestions=($(compgen -W "$(_acc)" -- "${COMP_WORDS[1]}"))
+  local i
+  if [ "${#suggestions[@]}" == "1" ]; then
+    local number="${suggestions[0]/%\ */}"
+    COMPREPLY=("$number")
+  else
+    for i in "${!suggestions[@]}"; do
+      suggestions[$i]="$(printf '%*s' "-$COLUMNS"  "${suggestions[$i]}")"
+    done
+
+    COMPREPLY=("${suggestions[@]}")
+  fi
+  unset -f _acc
+  unset -v IFS suggestions i
+}

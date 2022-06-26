@@ -1,0 +1,5 @@
+azure.functions.cli no module named 'distutils.util'
+
+https://www.codegrepper.com/code-examples/whatever/ModuleNotFoundError%3A+No+module+named+distutils.util
+$ sudo apt-get install python3-pip python3.8-distutils
+python3.8 -m pip install requests

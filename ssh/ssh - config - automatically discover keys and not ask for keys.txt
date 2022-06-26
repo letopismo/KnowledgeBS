@@ -1,0 +1,6 @@
+ https://www.freecodecamp.org/news/the-ultimate-guide-to-ssh-setting-up-ssh-keys/
+But if you remove the keys from ssh-agent with ssh-add -D or restart your computer, you will be prompted for password again when you try to use SSH. Turns out there's one more hoop to jump through. Open your SSH config file by running nano ~/.ssh/config and add the following:
+
+Host *
+  AddKeysToAgent yes
+  UseKeychain yes

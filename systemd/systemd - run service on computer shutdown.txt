@@ -1,0 +1,38 @@
+new version
+https://www.golinuxcloud.com/run-script-with-systemd-before-shutdown-linux/
+https://www.freedesktop.org/software/systemd/man/systemd.service.html
+
+[Unit]
+Description=Service to commit changes to remote git repo
+DefaultDependencies=no
+Before=shutdown.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/alexor2/Documents/KnowledgeBase/ci-scripts/systemd_service_push2repo.sh
+TimeoutStartSec=0
+
+[Install]
+WantedBy=shutdown.target
+
+
+
+The suggested solution is to run the service unit as a normal service - have a look at the [Install] section. So everything has to be thought reverse, dependencies too. Because the shutdown order is the reverse startup order. That's why the script has to be placed in ExecStop=.
+
+The following solution is working for me:
+
+[Unit]
+Description=...
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+ExecStop=<your script/program>
+
+[Install]
+WantedBy=multi-user.target
+RemainAfterExit=true is needed when you don't have an ExecStart action.
+
+After creating the file, make sure to systemctl daemon-reload and systemctl enable yourservice --now.
+
+ref: https://unix.stackexchange.com/questions/39226

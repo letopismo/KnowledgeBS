@@ -1,0 +1,27 @@
+https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ 
+
+
+CPU
+
+Fractional requests are allowed. When you define a container with spec.containers[].resources.requests.cpu set to 0.5, you are requesting half as much CPU time compared to if you asked for 1.0 CPU. For CPU resource units, the quantity expression 0.1 is equivalent to the expression 100m, which can be read as "one hundred millicpu". Some people say "one hundred millicores", and this is understood to mean the same thing.
+
+CPU resource is always specified as an absolute amount of resource, never as a relative amount. For example, 500m CPU represents the roughly same amount of computing power whether that container runs on a single-core, dual-core, or 48-core machine.
+
+Memory:
+
+Limits and requests for memory are measured in bytes. You can express memory as a plain integer or as a fixed-point number using one of these quantity suffixes: E, P, T, G, M, k. You can also use the power-of-two equivalents: Ei, Pi, Ti, Gi, Mi, Ki. For example, the following represent roughly the same value:
+
+128974848, 129e6, 129M,  128974848000m, 123Mi
+Pay attention to the case of the suffixes. If you request 400m of memory, this is a request for 0.4 bytes. Someone who types that probably meant to ask for 400 mebibytes (400Mi) or 400 megabytes (400M).
+
+
+
+example from values.yaml:
+
+resouces:
+    request:
+        memory: "550Mi" # mebibytes
+        cpu: "500m" # 0.5 CPU
+    limits:
+        memory: "800Mi"
+        cpu: "750M"

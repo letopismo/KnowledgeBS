@@ -1,0 +1,15 @@
+https://unix.stackexchange.com/questions/206415
+
+curl supports the smb protocol since v7.40: 
+curl --upload-file /path/to/file.ext  -u 'DOMAIN\Username' smb://172.16.17.52/ShareName/
+
+This worked great for me: curl --upload-file /home/me/local_file.txt --user "OurWindowsDomain\UserName:thePassword" smb://172.16.17.52/ShareName/Path/To/Remote/Dir. I got a list of all the available sharenames with smbclient -L //172.16.17.52 -U UserName%thePassword -W OurWindowsDomain – 
+
+Can I use curl --upload-file and create a new directory on samba? --create-dirs doesn't work.
+
+My example:
+
+curl --upload-file ./inv.log -u "prod/t45346" "smb:/10.56.129.106/t666871/activemq_investigationis/file.log"
+Enter host pasword for user: 'prod/t45346':
+
+curl: (1) Protocol smb not supported or disabled in libcurl

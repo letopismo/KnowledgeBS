@@ -1,0 +1,17 @@
+https://unix.stackexchange.com/questions/3842
+
+watch kubctl pods changing after deployment:
+
+watch kubectl get pods
+
+
+show latest entriese:
+
+watch is great, but this is one of the things it can't do. You can use tail to show the latest entries:
+
+watch "ls -rtx dir/ | tail -n $(($LINES - 2))"
+
+
+see files update in dir:
+$ watch -n1 'ls foo/bar*'
+ref: https://unix.stackexchange.com/questions/435387/

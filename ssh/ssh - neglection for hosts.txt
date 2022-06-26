@@ -1,0 +1,23 @@
+https://superuser.com/questions/859661/
+My SSH config file is set up to use a specific IdentityFile in the Host * section as the default key. For one particular host, I want to offer a different key (and only that key, never the default key).
+
+
+A Host line can have more than one pattern. And it's not really spelled out in the documentation, but a "!" (exclamation) at the beginning of a pattern means "if a host matches this pattern, then don't apply the section". In other words, you can do this:
+
+Host * !special1 !special2
+IdentityFile etc...
+And it should match any host except "special1" and "special2".
+
+I don't think the order of the patterns is important. The hostname being checked has to match one non-exclamation pattern, and it has to not match any exclamation patterns.
+
+So the config would look like this:
+
+Host specialhost
+HostName specialhostname.mydomain.com
+IdentityFile %d/.ssh/special-key
+LogLevel debug
+IdentitiesOnly yes 
+
+Host * !special1 !special2
+IdentityFile %d/.ssh/regular-key
+IdentitiesOnly yes 

@@ -1,0 +1,4 @@
+ref: https://stackoverflow.com/questions/3878624
+
+git update-index --refresh 
+git diff-index --quiet HEAD -- 

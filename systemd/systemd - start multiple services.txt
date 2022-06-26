@@ -1,0 +1,40 @@
+https://superuser.com/questions/728951
+start multiple services:
+$ systemctl --user start $(systemd-escape --template sample@.service arg1 arg2 arg3)
+Failed to start sample@arg1.service: Unit sample@arg1.service has a bad unit file setting.
+See user logs and 'systemctl --user status sample@arg1.service' for details.
+Failed to start sample@arg2.service: Unit sample@arg2.service has a bad unit file setting.
+See user logs and 'systemctl --user status sample@arg2.service' for details.
+Failed to start sample@arg3.service: Unit sample@arg3.service has a bad unit file setting.
+See user logs and 'systemctl --user status sample@arg3.service' for details.
+
+
+
+alexor2@alexor2-pc:~$ systemctl --user start $(systemd-escape --template sample@.service arg1 arg2 arg3)
+alexor2@alexor2-pc:~$ cat sample_service.log
+
+
+sample service:
+$ ls ~/.config/systemd/user/sample@.service
+/home/alexor2/.config/systemd/user/sample@.service
+
+
+# cat sample@.service
+[Unit]
+Description=Events
+DefaultDependencies=no
+Wants=network-online.target
+Wants=nss-lookup.target
+After=network.target
+After=network-online.target
+After=nss-lookup.target
+
+[Service]
+Environment="SCRIPT_ARGS=%I"
+ExecStart=/home/alexor2/sample_service.sh ${SCRIPT_ARGS}
+ExecStop=/home/alexor2/sample_service.sh ${SCRIPT_ARGS}
+Type=simple
+Restart=onfailure
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,17 @@
+1. systemd file needs to be placed in 
+
+~/.config/systemd/user/
+
+then:
+
+systemctl --user daemon-reload
+
+systemctl --user cat sample.service
+systemctl --user status sample.service
+
+systemctl --user start sample.service
+
+
+journalctl -u --user sample
+
+systemctl --user enable sample.service

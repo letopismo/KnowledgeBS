@@ -1,0 +1,15 @@
+From the Bash session in the Cloud Shell pane, run the following to create an AKS cluster using the latest version available:
+ref: https://microsoftlearning.github.io/AZ400-DesigningandImplementingMicrosoftDevOpsSolutions/Instructions/Labs/AZ400_M08_Deploying_multi-container_application_to_Azure_Kubernetes_Services.html
+bash
+AKSNAME='az400m16aks'$RANDOM$RANDOM
+az aks create --location $LOCATION --resource-group $RGNAME --name $AKSNAME --enable-addons monitoring --kubernetes-version $VERSION --generate-ssh-keys
+
+
+# Retrieve the id of the service principal configured for AKS
+CLIENT_ID=$(az aks show --resource-group $RGNAME --name $AKSNAME --query "identityProfile.kubeletidentity.clientId" --output tsv)
+
+# Retrieve the ACR registry resource id
+ACR_ID=$(az acr show --name $ACRNAME --resource-group $RGNAME --query "id" --output tsv)
+
+# Create role assignment
+az role assignment create --assignee $CLIENT_ID --role acrpull --scope $ACR_ID

@@ -1,0 +1,26 @@
+https://stackoverflow.com/questions/43814461
+
+YOur arm template syntax:
+
+"[resourceGroup.tags.tag1]"
+
+You need to ensure you RG have the tags mentioned in the template.
+
+
+My example:
+
+params:
+
+"parameters": {
+    "serviceBusNamespaceName": {
+            "type": "string",
+            "metadata": {
+                "description": "Specifies the subnet for private endpoint"
+            }
+    }
+}
+template:
+"varlables": {
+    "serviceBusNamespaceName": "[toLower( concat( resourceGroup().tags.companyRef, '-', parameters('serviceBusNamespaceNameSuffix'), '-', resourceGroup().tags.environment ) )]"
+    
+    

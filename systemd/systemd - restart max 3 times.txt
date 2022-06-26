@@ -1,0 +1,14 @@
+systemd - restart max 3 times
+https://www.freedesktop.org/software/systemd/man/systemd.unit.html#
+After much trial and error I solved my problem and thought it worth posting here...
+
+To allow a maximum of 5 retries separated by 30 seconds use the following options in the relevant systemd service file.
+
+[Unit]
+StartLimitInterval=200
+StartLimitBurst=5
+[Service]
+Restart=always
+RestartSec=30
+
+This worked for me for a service that runs a script using 'Type=idle'. Note that 'StartLimitInterval' must be greater than 'RestartSec * StartLimitBurst' otherwise the service will be restarted indefinitely.

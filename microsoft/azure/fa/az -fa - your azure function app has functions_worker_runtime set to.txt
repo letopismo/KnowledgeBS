@@ -1,0 +1,4 @@
+stackoverflow.com/questons/56971869
+pass --python to :
+
+func azure functionapp publish "$storageaccount" --debug -build local --python  --python-version 39

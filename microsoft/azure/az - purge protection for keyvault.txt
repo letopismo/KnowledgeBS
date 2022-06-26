@@ -1,0 +1,21 @@
+az - purge protection for keyvault.txt
+ref: https://docs.microsoft.com/en-us/azure/key-vault/general/soft-delete-overview
+ref: https://docs.microsoft.com/en-us/cli/azure/keyvault?view=azure-cli-latest
+
+Purge protection
+Purge protection is an optional Key Vault behavior and is not enabled by default. Purge protection can only be enabled once soft-delete is enabled. It can be turned on via CLI or PowerShell. Purge protection is recommended when using keys for encryption to prevent data loss. Most Azure services that integrate with Azure Key Vault, such as Storage, require purge protection to prevent data loss.
+
+$ az keyvault key purge --vault-name 'my-akv' --name 'storageEncrypt' --subscription my-subscription
+Operation "purge" is not allowed because purge protection is enabled for this vault. Key Vault sevice will automatically purge it after the retention period has passed.
+Vault:my-akv;location=northeurope
+
+$ az keyvault update -n 'my-akv' -g 'akv-rg' --subscription my-subscription --enable-purge-protection false
+(BadRequest) The property "enablePurgeProtection" cannot be set to false.Enabling the purge protection for a vault is anirreversible action
+Code: BadRequest
+
+
+enable purge protection (the other way):
+
+az resource update --id /subscriptions/xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/<resourceGroupName>/providers/Microsoft.KeyVault/vaults/<keyVaultName> --set properties.enablePurgeProtection=true properties.enableSoftDelete=true
+
+ref: https://docs.fugue.co/FG_R00227.html

@@ -1,0 +1,62 @@
+python lib:
+
+github.com/venthur/dotenv-cli
+
+$ ls .env
+$ dotenv make <TAB>
+
+check what env will you have:
+cat .env
+make=install
+dotenv env
+PYENV_SHELL=bash
+...
+make=install
+
+ref: github.com/venthur/dotenv-cli
+
+
+
+set -o allexport
+
+source conf-file
+
+set +o allexport
+
+
+for bash:
+
+cd () { __override_cd cd "$@"; }
+
+__override_cd() {
+if builtin "$@"; then
+	shift || true # remove the called method
+	if [[ -f project.settings ]]; then
+		source env.sh
+	fi
+	true
+else
+	return $?
+fi
+}
+
+
+function cd() {
+	new_dir="$*"; # single string of args instead of actual array
+	if [[ $# -eq 0 ]]; then
+		new_dir=$HOME
+	fi
+	builtin cd "${new_dir}"
+	if [[ -f .env ]]; then
+		source .env
+	fi
+}
+
+
+
+
+
+
+
+
+ref: https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836

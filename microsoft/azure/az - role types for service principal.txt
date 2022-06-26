@@ -1,0 +1,19 @@
+soralek-sp
+SUB_ID=$(az account show --query id --output tsv)
+az ad sp create-for-rbac --name "soralek-sp" --role contributor --scope /subscriptions/$SUB_ID
+
+ref: https://docs.microsoft.com/en-us/azure/role-based-access-control/role-assignments-steps
+
+The following lists four fundamental built-in roles. The first three apply to all resource types.
+
+Owner - Has full access to all resources including the right to delegate access to others.
+Contributor - Can create and manage all types of Azure resources but can't grant access to others.
+Reader - Can view existing Azure resources.
+User Access Administrator - Lets you manage user access to Azure resources.
+
+The following lists four fundamental built-in roles. The first three apply to all resource types.
+
+Owner - Has full access to all resources including the right to delegate access to others.
+Contributor - Can create and manage all types of Azure resources but can't grant access to others.
+Reader - Can view existing Azure resources.
+User Access Administrator - Lets you manage user access to Azure resources. 

@@ -1,0 +1,61 @@
+https://www.redhat.com/sysadmin/introduction-path-units
+Today’s systemd reads its initialization configuration for each daemon from a collection of unit files, which are often just called units. With path units, you can monitor files and directories for certain events. If a specified event occurs, a service unit is executed, and it usually carries the same name as the path unit. I will show how this works with a simple example.
+
+Let’s assume we would like to monitor a file. Whenever the file is closed after a write, a specific script should start.
+
+The path unit: example.path
+In the directory /etc/systemd/system/ we create the file example.path with the following content:
+
+[Unit]
+Description=Monitor the file for changes
+
+[Path]
+PathChanged=/home/john/testfile
+Unit=example.service
+
+[Install]
+WantedBy=multi-user.target
+In the [Path] section, PathChanged= specifies the absolute path to the file to be monitored, while Unit= indicates which service unit to execute if the file changes. This unit (example.path) should be started when the system is in multi-user mode.
+
+Next, we create the corresponding service unit example.service in /etc/systemd/system/.
+
+The service unit: example.service
+If the file testfile changes (meaning that it is both written to and closed), the following service unit will be called to execute the specified script:
+
+[Unit]
+Description=Executes script when a file has changed.
+
+[Service]
+Type=simple
+ExecStart=/home/john/script.sh
+
+[Install]
+WantedBy=multi-user.target
+In this example, the file script.sh contains only the following code:
+
+#!/bin/bash
+echo "file changed" >/home/john/output.txt
+To test the path unit, both of these new units must be activated, so run:
+
+$ sudo systemctl enable example.{path,service}
+$ sudo systemctl start example.path
+If you now rewrite—or write to—the file testfile, the corresponding service unit is executed, and the file output.txt is created in user john's home directory.
+
+The following incomplete and non-exhaustive list gives some examples where path units could make your Sysadmin Day a bit easier:
+
+Start event-driven data processing.
+Monitor files under /etc, and send a notification when changes occur.
+Monitor the import folder for new files, and start processing.
+Things to be aware of
+During my tests with path units, I noticed that not all events are caught under certain circumstances. For example, set up a path unit to monitor a path for changes, and then run the following command:
+
+$ touch /path/file && rm /path/file
+I would expect the service unit to be executed twice, here: the first time for the touch command, and the second time for the rm command. I filed a Bugzilla report to see if this issue is due to design, or a glitch that can be fixed.
+
+Sources and related links
+If you want to learn more about systemd units, including path and service units, take a look at the following man pages:
+
+systemd.unit (5)
+systemd.path (5)
+systemd.service (5)
+Also, if you are interested in the results of my bug report, you can follow it here: 

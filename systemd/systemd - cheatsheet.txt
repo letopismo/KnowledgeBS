@@ -1,0 +1,75 @@
+$ systemctl list-units --type service --user
+$ systemctl list-units --type service
+UNIT                                                                                      LOAD   ACTIVE SUB     DESCRIPTION                                                                
+accounts-daemon.service                                                                   loaded active running Accounts Service                                                           
+acpi-support.service                                                                      loaded active exited  LSB: Start some power management scripts                                   
+alsa-restore.service                                                                      loaded active exited  Save/Restore Sound Card State                                              
+alsa-state.service                                                                        loaded active running Manage Sound Card State (restore and store)                                
+apparmor.service                                                                          loaded active exited  Load AppArmor profiles                                                     
+avahi-daemon.service                                                                      loaded active running Avahi mDNS/DNS-SD Stack   
+
+and to see inactive (just like our git-cmp-kn-remote-upload-svc
+$ systemctl list-units --type service --user --all
+UNIT               LOAD   ACTIVE   SUB     DESCRIPTION                                   
+dbus.service       loaded active   running D-Bus User Message Bus                        
+dirmngr.service    loaded inactive dead    GnuPG network certificate management daemon   
+gpg-agent.service  loaded inactive dead    GnuPG cryptographic agent and passphrase cache
+obex.service       loaded active   running Bluetooth OBEX service                        
+pulseaudio.service loaded active   running Sound Service                                 
+sample.service     loaded inactive dead    Service to commit changes to remote git repo
+
+$ systemctl list-unit-files --user
+sample.service                 enabled
+
+$ systemctl list-unit-files 
+https://manpages.debian.org/bullseye-backports/systemd/systemd.exec.5.en.html
+
+see envvars:
+show-environment
+Dump the systemd manager environment block. This is the environment block that is passed to all processes the manager spawns. The environment block will be dumped in straightforward form suitable for sourcing into most shells. If no special characters or whitespace is present in the variable values, no escaping is performed, and the assignments have the form "VARIABLE=value". If whitespace or characters which have special meaning to the shell are present, dollar-single-quote escaping is used, and assignments have the form "VARIABLE=$'value'"
+  
+Reload the service files to include the new service.
+sudo systemctl daemon-reload
+
+Start-Stop-Restart-Status
+
+sudo systemctl status example.service
+$ sudo systemctl start foo-daemon
+$ sudo systemctl stop foo-daemon
+$ sudo systemctl restart foo-daemon
+$ systemctl status foo-daemon
+
+-l: don't truncate entries with ellipses (...)
+--no-pager can be added to avoid invoking a pager when the output is an interactive terminal.
+
+See global service logs:
+$ sudo journalctl -q  -u basic_test_service
+
+or user service logs:
+journalctl -q  --user-unit
+
+journalctl --user-unit SERVICENAME works fine even with storage set to volatile. But any of -u SERVICENAME, --user -u SERVICENAME or --user --user-unit SERVICENAME do not work with volatile storage, 
+ "journalctl --user -u SERVICENAME"
+should just work as you think. On older versions you have to use
+"--user --user-unit=SERVICENAME" instead.
+
+or in all logs:
+sudo journalctl  -xe
+
+To enable your service on every reboot
+sudo systemctl enable --now example.service
+
+To disable your service on every reboot
+sudo systemctl disable example.service
+ref: https://www.shubhamdipt.com/blog/how-to-create-a-systemd-service-in-linux/
+
+
+List failed units:
+$ systemctl --failed --user
+
+alexor2@alexor2-pc:~/Documents/KnowledgeBase$ systemctl list-unit-files
+UNIT FILE                                                                 STATE 
+alsa-utils.service                                                        masked         
+anacron.service                                                           enabled        
+apparmor.service                                                          enabled        
+apt-daily-upgrade.service                                                 static   

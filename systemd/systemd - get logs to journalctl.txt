@@ -1,0 +1,29 @@
+systemd - get logs to journalctl
+https://serverfault.com/questions/1089887
+Use the following in the unit file
+
+[Service]
+StandardError=journal
+StandardOutput=journal
+StandardInput=null
+See here for more: https://www.freedesktop.org/software/systemd/man/systemd.exec.html#StandardOutput=
+
+
+systemctl --user daemon-reload
+ 397  systemctl --user start sample.service
+ 398  sudo journalctl --user -u sample
+ 399  sudo journalctl
+
+cze 03 20:46:20 alexor2-pc systemd[686]: Configuration file /home/alexor2/.config/systemd/user/sample.service is marked executable. Please remove executable permission bits. Proceeding anyway.
+cze 03 20:46:20 alexor2-pc systemd[686]: Started Service to commit changes to Knowledgebase git repo.
+cze 03 20:46:20 alexor2-pc systemd_service_push2repo.sh[20412]: SCRIPT_DIR is /home/alexor2/Documents/KnowledgeBase
+cze 03 20:46:20 alexor2-pc systemd_service_push2repo.sh[20412]: 20:46:20_03.06.2022 - committing to Knowlegde Database
+cze 03 20:46:20 alexor2-pc systemd_service_push2repo.sh[20412]: [master 7bc694c] commit on 20:46:20_03.06.2022
+cze 03 20:46:20 alexor2-pc systemd_service_push2repo.sh[20412]:  1 file changed, 14 insertions(+)
+cze 03 20:46:20 alexor2-pc systemd_service_push2repo.sh[20412]:  create mode 100644 systemd/systemd - restart max 3 times.txt
+cze 03 20:46:22 alexor2-pc systemd_service_push2repo.sh[20412]: To github.com:aleXOR2/KnowledgeBase.git
+cze 03 20:46:22 alexor2-pc systemd_service_push2repo.sh[20412]:    cf4dcaa..7bc694c  master -> master
+cze 03 20:46:22 alexor2-pc systemd_service_push2repo.sh[20430]: SCRIPT_DIR is /home/alexor2/Documents/KnowledgeBase
+cze 03 20:46:22 alexor2-pc systemd_service_push2repo.sh[20430]: 22:46:20_03.06.2022 - no changes found in Knowlegde Database
+cze 03 20:46:22 alexor2-pc systemd[686]: sample.service: Succeeded.
+cze 03 20:46:24 alexor2-pc sudo[20439]:  alexor2 : TTY=pts/1 ; PWD=/home/alexor2 ; USER=root ; COMMAND=/usr/bin/journalctl --user -u sample

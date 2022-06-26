@@ -1,0 +1,15 @@
+https://unix.stackexchange.com/questions/179238
+less has very powerful pattern matching.  From the man page:
+
+&pattern
+
+Display only lines which match the pattern; lines which do not match the pattern are not displayed.  If pattern is empty (if you type & immediately followed by ENTER), any filtering is turned off, and all lines are displayed.  While filtering is in effect, an ampersand is displayed at the beginning of the prompt, as a reminder that some lines in the file may be hidden.
+Certain characters are special as in the / command†:
+
+^N or !
+
+Display only lines which do NOT match the pattern.
+^R
+(type CTRL + R)
+____________
+† Certain characters are special if entered at the beginning of the pattern; they modify the type of search rather than become part of the pattern.

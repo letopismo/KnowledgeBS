@@ -1,0 +1,20 @@
+[Unit]
+Description=Service to commit changes to Knowledgebase git repo
+DefaultDependencies=no
+Wants=network-online.target
+Wants=nss-lookup.target
+After=network.target
+After=network-online.target
+After=nss-lookup.target
+StartLimitInterval=31
+StartLimitBurst=3
+
+[Service]
+ExecStart=/home/alexor2/Documents/KnowledgeBase/ci-scripts/systemd_service_push2repo.sh
+ExecStop=/home/alexor2/Documents/KnowledgeBase/ci-scripts/systemd_service_push2repo.sh
+Type=simple
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

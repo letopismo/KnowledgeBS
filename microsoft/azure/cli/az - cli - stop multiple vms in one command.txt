@@ -1,0 +1,2 @@
+ref: https://docs.microsoft.com/en-us/cli/azure/vm?view=azure-cli-latest#az-vm-stop
+az vm stop -g mygroup -n vm0 -n vm1

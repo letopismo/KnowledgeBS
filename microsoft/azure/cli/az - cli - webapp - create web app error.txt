@@ -1,0 +1,18 @@
+az - cli - webapp - create web app error
+https://www.azuredevopslabs.com/labs/vstsextend/releasegates/
+
+RESOURCEGROUPNAME='az400m10l01-RG'
+SERVICEPLANNAME='az400m01l01-sp1'
+az webapp create -g $RESOURCEGROUPNAME -p $SERVICEPLANNAME -n "PU${SUFFIX}-Canary"
+TypeError: _StackRuntimeHelper.__init__() got multiple values for argument 'linux'
+
+
+. Please remove it with
+
+az extension remove -n appservice-kube
+
+and get the current public version with
+
+az extension add -n appservice-kube
+
+ref: https://issueantenna.com/repo/Azure/azure-cli-extensions/issues/4613

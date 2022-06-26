@@ -1,0 +1,44 @@
+ref: https://man7.org/linux/man-pages/man1/xargs.1.html
+$ az group list --query "[].name" --output tsv | xargs echo 'az group delete --name $0 --no-wait --yes'
+az group delete --name $0 --no-wait --yes VisualStudioOnline-c94BE7 cloudshell-rg az400m07I01-RG
+$ az group list --query "[].name" --output tsv | xargs -L1 echo 'az group delete --name $0 --no-wait --yes'
+az group delete --name $0 --no-wait --yes VisualStudioOnline-c94BE7
+az group delete --name $0 --no-wait --yes cloudshell-rg
+az group delete --name $0 --no-wait --yes az400m07I01-RG
+
+
+or
+az group list --query "[?starts_with(name,'az400m10l01-RG')].[name]" --output tsv | xargs -L1 bash -c 'az group delete --name $0 --no-wait --yes'
+az group list --query "[?starts_with(name,'az400m10l01-RG')].[name]" --output tsv | xargs -L1 az group delete --no-wait --yes --name
+
+ The options --max-lines (-L, -l), --replace (-I, -i) and --max-
+       args (-n) are mutually exclusive. If some of them are specified
+       at the same time, then xargs will generally use the option
+       specified last on the command line, i.e., it will reset the value
+       of the offending option (given before) to its default value.
+       Additionally, xargs will issue a warning diagnostic on stderr.
+       The exception to this rule is that the special max-args value 1
+       ('-n1') is ignored after the --replace option and its aliases -I
+       and -i, because it would not actually conflict.
+       
+       -I replace-str
+              Replace occurrences of replace-str in the initial-
+              arguments with names read from standard input.  Also,
+              unquoted blanks do not terminate input items; instead the
+              separator is the newline character.  Implies -x and -L 1.
+
+       -i[replace-str], --replace[=replace-str]
+              This option is a synonym for -Ireplace-str if replace-str
+              is specified.  If the replace-str argument is missing, the
+              effect is the same as -I{}.  This option is deprecated;
+              use -I instead.
+
+       -L max-lines
+              Use at most max-lines nonblank input lines per command
+              line.  Trailing blanks cause an input line to be logically
+              continued on the next input line.  Implies -x.
+
+       -l[max-lines], --max-lines[=max-lines]
+              Synonym for the -L option.  Unlike -L, the max-lines
+              argument is optional.  If max-lines is not specified, it
+              defaults to one.  The -l option is depre

@@ -1,0 +1,4 @@
+https://stackoverflow.com/questions/38512124
+Apparently, this feature is intentional. I found out that a correct way to remove all remote branches that have been deleted from Github is to run the following command.
+
+git fetch --prune

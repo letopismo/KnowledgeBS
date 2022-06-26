@@ -1,0 +1,9 @@
+debian - error when apt repo changed definition
+
+$ apt update
+E: Repository 'http://ftp.debian.org/debian buster InRelease' changed its 'Suite' value from 'stable' to 'oldstable'
+
+
+
+apt-get update --allow-releaseinfo-change
+

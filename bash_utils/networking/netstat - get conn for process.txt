@@ -1,0 +1,8 @@
+a lot of dup connections in stomp port
+
+$ netstat -anp | grep :61613 | awk '{print $5}' | cut -d: -f 1 | sort | wc -l
+300000+
+$ netstat -anp | grep :61613 | awk '{print $5}' | cut -d: -f 1 | sort | uniq | wc -l
+15961
+
+

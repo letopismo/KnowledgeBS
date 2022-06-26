@@ -1,0 +1,17 @@
+[Unit]
+Description=Events
+DefaultDependencies=no
+Wants=network-online.target
+Wants=nss-lookup.target
+After=network.target
+After=network-online.target
+After=nss-lookup.target
+
+[Service]
+ExecStart=/bin/bash -c 'echo "starting sample.service" >> /home/alexor2/sample_service.log'
+ExecStop=/bin/bash -c 'echo "stopping sample.service" >> /home/alexor2/sample_service.log'
+Type=simple
+Restart=onfailure
+
+[Install]
+WantedBy=multi-user.target

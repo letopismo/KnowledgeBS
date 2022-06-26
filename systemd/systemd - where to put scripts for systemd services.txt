@@ -1,0 +1,7 @@
+https://unix.stackexchange.com/questions/226535
+
+I also was thinking about this same question and wanted to see other's opinion. My take on it is /usr/local/sbin as sbin is where you put things that should be run by admin.
+
+Your analysis is correct the /usr/local is the location dedicated for installing stuff not managed by package manager. But bin is for stuff that should be runnable by regular users. In either case, you should not allow write access to anybody but root to the files in /usr/local. That's the convention as far as I remember (for the whole /usr/).
+
+/opt is usually used for packages that are not used by default on the system and user should set some environment variables to access by bin/man/etc. directories of specific package. Read the links I've provided above. 

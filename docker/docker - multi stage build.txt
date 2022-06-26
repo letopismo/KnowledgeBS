@@ -1,0 +1,50 @@
+https://docs.docker.com/develop/develop-images/multistage-build/
+
+# syntax=docker/dockerfile:1
+FROM golang:1.16
+WORKDIR /go/src/github.com/alexellis/href-counter/
+RUN go get -d -v golang.org/x/net/html  
+COPY app.go ./
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app .
+
+FROM alpine:latest  
+RUN apk --no-cache add ca-certificates
+WORKDIR /root/
+COPY --from=0 /go/src/github.com/alexellis/href-counter/app ./
+CMD ["./app"]  
+
+
+Development/test helper for minimal production stage
+Let’s finish up with an example of combining the previous patterns to show how to create a Dockerfile that creates a minimal production image and then can use the contents of it for running tests or for creating a development image. Start with a basic example Dockerfile:
+
+FROM golang:alpine AS stage0
+…
+FROM golang:alpine AS stage1
+…
+
+FROM scratch
+COPY --from=stage0 /binary0 /bin
+COPY --from=stage1 /binary1 /bin
+
+This is quite a common when creating a minimal production image. But what if you wanted to also get an alternative developer image or run tests with these binaries in the final stage? An obvious way would be just to copy the same binaries to the test and developer stages as well. A problem with that is that there isn’t a guarantee that you will test all the production binaries in the same combination. Something may change in the final stage and you may forget to make identical changes to the other stages or make a mistake to the path where the binaries are copied. After all, we want to test the final image not an individual binary.
+
+An alternative pattern would be to define a developer and test stage after production stage and copy the whole production stage contents. A single FROM command with the production stage can be then used to make the production stage default again as the last step.
+
+FROM golang:alpine AS stage0
+…
+
+FROM scratch AS release
+COPY --from=stage0 /binary0 /bin
+COPY --from=stage1 /binary1 /bin
+
+FROM golang:alpine AS dev-env
+COPY --from=release / /
+ENTRYPOINT ["ash"]
+
+FROM golang:alpine AS test
+COPY --from=release / /
+RUN go test …
+
+FROM release
+
+ref: https://www.docker.com/blog/advanced-dockerfiles-faster-builds-and-smaller-images-using-buildkit-and-multistage-builds/

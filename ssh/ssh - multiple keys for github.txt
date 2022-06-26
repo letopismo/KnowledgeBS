@@ -1,0 +1,25 @@
+Multiple SSH Keys settings for different github account
+https://gist.github.com/jexchan/2351996
+
+GIT_SSH_COMMAND='ssh -i ~/.ssh/my_gitlab_key_rsa -o IdentitiesOnly=yes' git clone <your clone git url here>
+
+or
+
+Thanks worked a treat. The following worked for me:
+git clone git@github.com-sshID:myGitHubAccount/myRepo.git
+
+my example:
+
+Host github.com-main
+        HostName github.com
+        IdentityFile ~/.ssh/id_rsa_github20220519
+        IdentitiesOnly yes
+
+
+Host github.com-letopismo
+        Hostname github.com
+        IdentityFile ~/.ssh/id_letopismo
+        IdentitiesOnly yes # see NOTES below
+
+and cloning
+git clone git@github.com-letopismo:letopismo/KnowledgeBS.git

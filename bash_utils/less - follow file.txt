@@ -1,0 +1,5 @@
+ref: https://stackoverflow.com/questions/16828
+
+Another little used feature of less that I found is starting it with +F as an argument (or hitting SHIFT+F while in less). This causes it to follow the file you've opened, in the same way that tail -f <file> will. Very handy if you're watching log files from an application, and are likely to want to page back up (if it's generating 100's of lines of logging every second, for instance).
+
+In less, you can type F (Shift+F) to keep reading at the end of a file (like tail -f); you can type :e and a file name to view a different file, but unfortunately, if you enter the name of the current file, less doesn't reload the file. However there's a trick to make it re-read the current file, suggested by sabgenton: type :e and enter the name of a non-existent file; that causes less to display an error message and then reload the current file.

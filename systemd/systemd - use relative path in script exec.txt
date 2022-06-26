@@ -1,0 +1,5 @@
+https://superuser.com/questions/1282243/how-to-avoid-an-absolute-path-to-an-executable-in-systemd
+
+No, systemd has no built-in feature for this.
+
+Just as with Upstart, you'll have to call a shell.

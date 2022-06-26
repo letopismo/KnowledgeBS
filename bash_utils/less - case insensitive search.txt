@@ -1,0 +1,27 @@
+type 
+
+:-i for case insensitive inside liess
+
+type:
+
+:+i to return sensivity
+
+or for one prompt
+
+/search string/-i
+
+add env var for def options:
+
+   LESS="-options"; export LESS
+
+LESS=-Ri 
+(
+-R or -raw-contorl-chars
+
+Only ANSI color escape seq's are output in raw form.
+
+toggle case sensivity alias:
+
+If that brings back the case-sensitivity for you, then you could just alias less=less -+i, maybe together with alias lessi=less -i.
+
+ref: https://unix.stackexchange.com/questions/116395/less-searches-are-always-case-insensitive

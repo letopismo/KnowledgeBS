@@ -1,0 +1,18 @@
+tf - show properties of the provisioned resource
+https://www.terraform.io/cli/commands/state/show
+
+
+tf state show "module.servicebus.azurerm_servicebus_namespace.svcbus_ns"
+
+resource "azurerm_servicebus_namespace" "svcbus_ns" {
+props go further down...
+
+
+
+to see modules addresses list use
+
+tf state list
+
+so sometimes it would be 
+
+module.storage[0].azurerm_key_vault_policy.storage_myfiles

@@ -1,0 +1,13 @@
+systemd - redirect systemd service log to file
+1. Modify the service file
+Open the service file with $ sudo vi /lib/systemd/system/{name}.service
+
+Modify the [Service] section:
+
+[Service]
+...
+StandardOutput=file:/var/log/{name}/logs.log
+StandardError=file:/var/log/{name}/logs.log
+
+https://www.freedesktop.org/software/systemd/man/systemd.exec.html
+https://gist.github.com/adam-hanna/06afe09209589c80ba460662f7dce65c

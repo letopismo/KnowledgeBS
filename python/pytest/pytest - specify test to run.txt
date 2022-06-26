@@ -1,0 +1,3 @@
+pytest -v ---log-level=INFO -s -k 'test_send_batch_message'
+
+ref: https://docs.pytest.org/en/latest/example/markers.html#using-k-expr-to-select-tests-based-on-their-name

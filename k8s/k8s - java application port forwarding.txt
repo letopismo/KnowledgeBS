@@ -1,0 +1,28 @@
+ In intellij:
+Run / Debug configuration: 
+Command lin args for remote jvm:
+-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+
+ref: https://www.jetbrains.com/help/idea/attaching-to-local-process.html#attach-to-remote
+
+in helm values.yaml:
+
+env:
+    - name JAVA_TOOL_OPTIONS
+      value: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -javaagent:/applicationinsights.ar -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts"
+      
+
+      and in templates/deployment.yaml:
+```
+containers:
+  - name {{ .Values.name }}
+    env: {{- toYaml .Values.env | nindent12 }}
+
+
+
+kubectl port-forward -n ubsdeploy <pod-name> 5005:5005
+
+Q: what port type supported for port-forwarding?
+A: Note: kubectl port-forward is implemented for TCP ports only. The support for UDP protocol is tracked in issue 47862.
+R: https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/
+https://www.containiq.com/post/kubectl-port-forward

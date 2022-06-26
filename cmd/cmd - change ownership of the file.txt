@@ -1,0 +1,18 @@
+https://www.winhelponline.com/blog/take-ownership-of-file-or-folder/
+
+ 
+takeown /R /A /F foldername
+icacls foldername /grant domain\Administrators:F /T
+
+or
+
+for /l %%x in (1, 1, 1000) do (
+echo %%x
+takeown /R /A /F foldername /D N
+icacls "foldername" /grant domain\Administrators:F /T /C
+)
+
+
+https://serverfault.com/questions/516324
+
+icacls "C:/foo" /grant:r "Users":F

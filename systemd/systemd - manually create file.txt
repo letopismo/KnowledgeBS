@@ -1,0 +1,14 @@
+systemd - create manually files
+ref: https://unix.stackexchange.com/questions/599809/what-are-systemd-runtime-unit-files-for
+
+You can customize timers and unit files with
+sudo systemctl edit unit/timer
+to add some things to the original file or
+
+sudo systemctl edit --full unit/timer
+
+to completely edit the unit file or timer.
+
+
+Run 'systemctl edit --force --full unit-push2git.service' to create a new unit.
+

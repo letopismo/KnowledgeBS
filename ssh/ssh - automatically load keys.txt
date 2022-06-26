@@ -1,0 +1,62 @@
+ https://unix.stackexchange.com/questions/90853/how-can-i-run-ssh-add-automatically-without-a-password-prompt
+This is a typical example of a trade-off between security and convenience. Luckily there are a number of options. The most appropriate solution depends on the usage scenario and desired level of security.
+
+ssh-key with passphrase, no ssh-agent
+
+Now the passphrase has to be entered every time the key is used for authentication. While this is the best option from a security standpoint, it offers the worst usability. This may also lead to a weak passphrase being chosen in order to lessen the burden of entering it repeatedly.
+
+ssh-key with passphrase, with ssh-agent
+
+Adding the following to ~/.bash_profile will automatically start ssh-agent and load the ssh-key(s) on login:
+
+if [ -z "$SSH_AUTH_SOCK" ] ; then
+  eval `ssh-agent -s`
+  ssh-add
+fi
+Now the passphrase must be entered upon every login. While slightly better from a usability perspective, this has the drawback that ssh-agent prompts for the passphrase regardless of if the key is to be used or not during the login session. Each new login also spawns a distinct ssh-agent instance which remains running with the added keys in memory even after logout, unless explicitly killed.
+
+To kill ssh_agent on logout, add the following to ~/.bash_logout
+
+if [ -n "$SSH_AUTH_SOCK" ] ; then
+  eval `/usr/bin/ssh-agent -k`
+fi
+or the following to ~/.bash_profile
+
+trap 'test -n "$SSH_AUTH_SOCK" && eval `/usr/bin/ssh-agent -k`' 0
+Creating multiple ssh-agent instances can be avoided by creating a persistent communication socket to the agent at a fixed location in the file system, such as in Collin Anderson's answer. This is an improvement over spawning multiple agents instances. However, unless explicitly killed, the decrypted key still remains in memory after logout.
+
+On desktops, ssh-agents included with the desktop environment, such as the Gnome Keyring SSH Agent, can be a better approach as they typically can be made to prompt for the passphrase the first time the ssh-key is used during a login session and store the decrypted private key in memory until the end of the session.
+
+ssh-key with passphrase, with ssh-ident
+
+ssh-ident is a utility that can manage ssh-agent on your behalf and load identities as necessary. It adds keys only once as they are needed, regardless of how many terminals, ssh or login sessions that require access to an ssh-agent. It can also add and use a different agent and different set of keys depending on the host being connected to, or the directory ssh is invoked from. This allows for isolating keys when using agent forwarding with different hosts. It also allows to use multiple accounts on sites like GitHub.
+
+To enable ssh-ident, install it and add the following alias to your ~/.bash_profile:
+
+alias ssh='/path/to/ssh-ident'
+ssh-key with passphrase, with keychain
+
+keychain is a small utility which manages ssh-agent on your behalf and allows the ssh-agent to remain running when the login session ends. On subsequent logins, keychain will connect to the existing ssh-agent instance. In practice, this means that the passphrase must be be entered only during the first login after a reboot. On subsequent logins, the unencrypted key from the existing ssh-agent instance is used. This can also be useful for allowing passwordless RSA/DSA authentication in cron jobs without passwordless ssh-keys.
+
+To enable keychain, install it and add something like the following to ~/.bash_profile:
+
+eval `keychain --agents ssh --eval id_rsa`
+From a security point of view, ssh-ident and keychain are worse than ssh-agent instances limited to the lifetime of a particular session, but they offer a high level of convenience. To improve the security of keychain, some people add the --clear option to their ~/.bash_profile keychain invocation. By doing this passphrases must be re-entered on login as above, but cron jobs will still have access to the unencrypted keys after the user logs out. The keychain wiki page has more information and examples.
+
+ssh-key without passphrase
+
+From a security standpoint, this is the worst option since the private key is entirely unprotected in case it is exposed. This is, however, the only way to make sure that the passphrase need not be re-entered after a reboot.
+
+ssh-key with passphrase, with ssh-agent, passing passphrase to ssh-add from script
+
+While it might seem like a straightforward idea to pass the passphrase to ssh-add from a script, e.g. echo "passphrase\n" | ssh-add, this is not as straighforward as it seems as ssh-add does not read the passphrase from stdin, but opens /dev/tty directly for reading.
+
+This can be worked around with expect, a tool for automating interactive applications. Below is an example of a script which adds a ssh-key using a passphrase stored in the script:
+
+#!/usr/bin/expect -f
+spawn ssh-add /home/user/.ssh/id_rsa
+expect "Enter passphrase for /home/user/.ssh/id_rsa:"
+send "passphrase\n";
+expect "Identity added: /home/user/.ssh/id_rsa (/home/user/.ssh/id_rsa)"
+interact
+Note that as the passphrase is stored in plaintext in the script, from a security perspective, this is hardly better than having a passwordless ssh-key. If this approach is to be used, it is important to make sure that the expect script containing the passphrase has proper permissions set to it, making it readable, writable and runnable only by the key owner.
