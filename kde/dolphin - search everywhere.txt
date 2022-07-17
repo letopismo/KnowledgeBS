@@ -1,0 +1,8 @@
+ref: https://docs.kde.org/stable5/en/dolphin/dolphin/quick-tips.html#:~:text=Dolphin%20is%20capable%20of%20searching,and%20the%20search%20starts%20immediately.
+Filtering Files
+Dolphin is capable of filtering files, i.e. showing only those items in the view whose name contains a given text. For example, if you wish to show only the MP3 files within a folder, you could filter for “.mp3”. This would then filter out all files whose name does not contain “.mp3”.
+
+To filter files, first enable the filter bar, either by pressing Ctrl+I or via the menu: Edit → Filter.... You can then enter the text to be filtered for in the filter bar. The filter bar can be disabled either by pressing Esc, or with a left mouse button click on the Hide Filter Bar icon.
+
+Finding Files and Searching in Files
+Dolphin is capable of searching for files and for content in files. If Ctrl+F is pressed or Edit → Search... is used, the Search bar will open already set up to search for files within the current folder and any sub-folders. Start to type into the find input box and the search starts immediately. 

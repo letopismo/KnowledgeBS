@@ -1,0 +1,5 @@
+ https://techcommunity.microsoft.com/t5/azure-observability/query-multiple-quot-contains-quot/m-p/1164287
+
+let ComputerTerms = pack_array('abcd', 'xyz0');
+datatable (Computer:string)['abcd.123.com', 'def.xyz0.org', 'ijk.com']
+| where Computer has_any (ComputerTerms)

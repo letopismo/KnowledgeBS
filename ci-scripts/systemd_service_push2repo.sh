@@ -3,8 +3,9 @@ set -eu
 
 if [ -z "$SSH_AUTH_SOCK" ] ; then
   eval `ssh-agent -s`
-  ssh-add $HOME/.ssh/*
 fi
+
+ssh-add $HOME/.ssh/* || :
 
 SCRIPT_DIR=$(dirname $(dirname $(realpath "$0")))
 echo "SCRIPT_DIR is $SCRIPT_DIR"
@@ -18,6 +19,6 @@ if $(git diff-index --quiet HEAD --); then
 else
   echo "$(date +%S:%M:%H_%d.%m.%Y) - committing to Knowlegde Database"
   git commit -am "commit on $(date +%S:%M:%H_%d.%m.%Y)"
-  git push -f
+  git push -f -v
 fi
 
