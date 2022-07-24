@@ -1,0 +1,15 @@
+git - search for a file name in git history
+
+https://dev.to/franzwong/view-last-change-of-a-file-in-git-2och
+
+git log -p -- /path/to/file
+
+or (current branch):
+
+$ git log -p '*vm*'
+
+or all:
+
+git log --all --first-parent --remotes --reflog --author-date-order -- filename
+
+ref: https://stackoverflow.com/questions/3701404
