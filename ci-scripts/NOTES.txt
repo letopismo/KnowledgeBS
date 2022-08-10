@@ -1,3 +1,21 @@
+0. Git tunning. There 2 qeys, wun for leto one for tech:
+
+$ cat ~/.ssh/config
+
+$ cat ~/.ssh/config 
+Host github
+    HostName github.com
+    IdentityFile ~/.ssh/id_github.ed25519
+    User git
+    IdentitiesOnly yes
+
+
+Host czasopismo-github
+    HostName github.com
+    IdentityFile ~/.ssh/id_czasopismo2
+    User git
+    IdentitiesOnly yes
+
 1. systemd file needs to be placed in 
 
 ~/.config/systemd/user/
@@ -15,3 +33,4 @@ systemctl --user start push2git.service --now
 journalctl -u --user push2git
 
 systemctl --user enable push2git.service
+

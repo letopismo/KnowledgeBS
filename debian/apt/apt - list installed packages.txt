@@ -1,0 +1,7 @@
+To avoid this message use the dpkg command as follows:
+dpkg --list | grep nginx
+dpkg --list | more
+
+List all installed packages only
+The apt command displays both installed and packages available to install. What if you want to list currently installed software only? Fear not, pass the option to the apt command:
+apt list --installed 

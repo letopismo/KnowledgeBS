@@ -1,0 +1,3 @@
+GIT_SSH_COMMAND='ssh -i private_key_file -o IdentitiesOnly=yes' git clone usre@host:repo.git
+
+ref:  stack/q/4565700

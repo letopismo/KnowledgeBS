@@ -1,0 +1,13 @@
+https://ask.libreoffice.org/t/how-do-i-insert-special-characters-in-libreoffice-on-ubuntu-if-alt-188-or-other-key-combinations-dont-work/9164
+
+As you enter the Unicode, it will display the numeric value temporarily. For example, for Unicode character (U+2009), when you press Ctrl+Shift+u, you will first see an underlined lowercase “U”, then the digits of the code you are entering. Press Enter or to complete the sequence; the u2009 code will be replaced by the Unicode character, if the font you are using supports it. You can omit the leading zeros for codes that have them and the result is the same. 
+
+list of unicode chars:
+https://en.wikipedia.org/wiki/List_of_Unicode_characters
+
+for instance (stamped mail): U+1F583
+
+inserted as:
+ctrl+ shift + u + 1f583
+
+https://stackoverflow.com/questions/40061158/what-is-the-uni-code-of-map-icon

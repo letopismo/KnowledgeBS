@@ -1,0 +1,9 @@
+ref: stack/q/60420708
+function Get-TenLastModFiles {
+	$rootPath = $PWD
+	$result = Get-ChildItem -Path $rootPath -recurse -File | Group-Object DirectoryName | FOrEach-Object {
+		$_.Group | Sort-Object LastWriteTime -Descending |
+		Select-Object -First 1 -Proerty FullName, LastWriteTime
+	}
+	echo $result
+}
