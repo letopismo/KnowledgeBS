@@ -1,0 +1,22 @@
+https://kubernetes.io/docs/concepts/services-networking/ingress/
+Terminology
+For clarity, this guide defines the following terms:
+
+Node: A worker machine in Kubernetes, part of a cluster.
+
+Cluster: A set of Nodes that run containerized applications managed by Kubernetes. For this example, and in most common Kubernetes deployments, nodes in the cluster are not part of the public internet.
+
+Edge router: A router that enforces the firewall policy for your cluster. This could be a gateway managed by a cloud provider or a physical piece of hardware.
+
+Cluster network: A set of links, logical or physical, that facilitate communication within a cluster according to the Kubernetes networking model.
+
+Service: A Kubernetes Service that identifies a set of Pods using label selectors. Unless mentioned otherwise, Services are assumed to have virtual IPs only routable within the cluster network.
+ 
+Kubernetes Controllers and Operators
+Kubernetes is an orchestration platform built around a loosely coupled central API. The API provides a collection of resource definitions, along with Controllers (which typically run as Pods inside the platform) to monitor and manage those resources. The Kubernetes API is extensible, and Operators (a type of Controller) can be used to extend the functionality of Kubernetes.
+
+Controllers – A core part of the Kubernetes system. They create “watches” for specific Kubernetes resources and perform the necessary steps to reach the desired state of each resource as it changes. In customer conversations, the most common Kubernetes Controller discussed is the “Ingress Controller.”
+
+Operators – Custom controllers which define and make use of custom resource definitions (CRDs) to manage applications and their components.
+
+ref:https://www.nginx.com/blog/configuring-nginx-plus-external-load-balancer-red-hat-ocp-kubernetes/

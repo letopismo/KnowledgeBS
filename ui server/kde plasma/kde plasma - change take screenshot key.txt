@@ -1,0 +1,5 @@
+https://docs.kde.org/stable5/en/spectacle/spectacle/using.htmlv
+
+https://askubuntu.com/questions/1079626
+
+Open System Settings > Shortcuts > Custom Shortcuts -> Screenshots
