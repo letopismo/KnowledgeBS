@@ -1,0 +1,29 @@
+rust - Remove single trailing newline from String without cloning
+https://stackoverflow.com/questions/37888042
+
+fn strip_trailing_newline(input: &str) -> &str {
+    input
+        .strip_suffix("\r\n")
+        .or(input.strip_suffix("\n"))
+        .unwrap_or(input)
+}
+
+something:
+
+fn main() {
+    // Instead of File::open("....\\src\\bus.txt").expect("Can't Open File")
+    let buf = "2 4 1 2\r\n";
+    println!("unchanged: '{}'", buf);
+
+    println!("changed: '{}'", strip_trailing_newline(&buf));
+}
+
+
+fn strip_trailing_newline(input: &str) -> &str {
+    input
+        .strip_suffix("\r\n")
+        .or(input.strip_suffix("\n"))
+        .unwrap_or_else(|| input)
+}
+
+https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=ed17ea24cfcf4b45549846a5c9f1edfd

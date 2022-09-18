@@ -1,0 +1,62 @@
+https://stackoverflow.com/questions/37586216
+
+and for debug formatting
+https://doc.rust-lang.org/beta/rust-by-example/hello/print/print_debug.html
+
+I find a good level of usability with VS Code and the CodeLLDB extension:
+
+Install VS Code
+
+Search and install the extension rust-analyzer from within VS Code
+
+Check requisites and setup CodeLLDB for your platform. As of v1.6, no further setup should be needed.
+
+Search and install the extension CodeLLDB from within VS Code
+
+The LLDB Debugger added the main menu item "Run" from where the debugger can be started. When debugging is started for the first time, you must select the environment (the debugger): select LLDB.
+
+When you select LLDB, a launch.json file will be opened, if not, open it, it's under .vscode folder
+
+Your launch.json should look like this:
+
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug",
+            "program": "${workspaceRoot}/target/debug/hello_world",
+            "args": [],
+            "cwd": "${workspaceRoot}/target/debug/",
+            "sourceLanguages": ["rust"]
+        }
+    ]
+}
+If you wanted to keep things generic and only compile a binary that matches the cargo folder name, you could use ${workspaceRootFolderName} variable substitution for the "program" key:
+
+ {
+     "version": "0.2.0",
+     "configurations": [
+         {
+             "type": "lldb",
+             "request": "launch",
+             "name": "Debug",
+             "program": "${workspaceRoot}/target/debug/${workspaceRootFolderName}",
+             "args": [],
+             "cwd": "${workspaceRoot}/target/debug/",
+             "sourceLanguages": ["rust"]
+         }
+     ]
+ }
+Here are some blog posts about Rust and VS Code: 
+
+
+and gdb
+https://blog.logrocket.com/debugging-rust-apps-with-gdb/
+
+cheatsheet
+https://darkdust.net/files/GDB%20Cheat%20Sheet.pdf

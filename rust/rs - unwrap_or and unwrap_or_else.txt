@@ -1,0 +1,16 @@
+rs - unwrap_or and unwrap_or_else
+https://stackoverflow.com/questions/56726571/
+
+Question:
+
+fn main() {
+    let _one = None.unwrap_or("one".to_string());
+    let _two = None.unwrap_or_else(|| "two".to_string());
+}
+
+
+Solution:
+Both are evaluated during the program's execution and can be arbitrary values. The difference is that:
+
+With unwrap_or the fallback value is evaluated just before unwrap_or is called, and therefore is evaluated whether it's needed or not (because Rust is an eager language).
+With unwrap_or_else the fallback value is evaluated only when unwrap_or_else triggers it (by invoking the function you pass), and therefore is evaluated only if it's needed.

@@ -5,12 +5,10 @@ You can show everything with:
 
 grep ^ /etc/apt/sources.list /etc/apt/sources.list.d/*
 
-
 Add:
 
 sudo add-apt-repository ppa:notepadqq-team/notepadqq
 sudo apt-get update
-
 
 Remove:
 ref: https://askubuntu.com/questions/307/how-can-ppas-be-removed

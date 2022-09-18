@@ -1,0 +1,8 @@
+/home/alexor2/.cachekde
+https://github.com/wbthomason/packer.nvim#debugging
+
+$XDG_CACHE_HOME
+/home/alexor2/.cachekde
+
+ls /home/alexor2/.cachekde/nvim/
+log                lsp.log            luacache_chunks    luacache_modpaths  packer.nvim/     

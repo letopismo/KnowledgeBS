@@ -1,0 +1,9 @@
+rs - clone string
+
+std::string::String implements the clone() method, so you could achieve the same thing in a more direct way using:
+
+let thisfile_path = file.filepath.clone();
+
+ref:
+https://doc.rust-lang.org/std/string/struct.String.html#method.clone
+https://stackoverflow.com/questions/45275362

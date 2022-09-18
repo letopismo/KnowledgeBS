@@ -1,0 +1,3 @@
+https://stackoverflow.com/questions/41410097
+
+the config file for neovim is at ~/.config/nvim/init.vim. or if set $XDG_CONFIG_HOME/nvim/init.vim. you can get more info with :help nvim-configuration from your neovim instance. 

@@ -1,0 +1,34 @@
+https://vitux.com/how-to-add-ppa-repositories-in-debian/ 
+
+How to add/remove PPA repositories in Debian
+Linux users install the majority of the programs from their centralized official repository listed in the sources.list file. However, if the program is not listed in the repository list, you can install it via its PPA (personal package archive). These are unofficial repositories that Launchpad made available to users. Launchpad is a collaboration platform developed by Canonical that allows developers to upload their source package on it. Launchpad then makes those packages available for users to install the application from.
+
+In this article, we will explain how you can use the Debian command line and GUI to manage PPA repositories in your system. We will explain in detail how to add, view, and remove a PPA repository.
+
+
+Please note that we have used Debian 10 for running the commands and procedures discussed in this article. However, the same commands and procedures can also be followed in other versions of Debian.
+
+Manage PPA Repositories through the Command Line
+For users who prefer the command line for performing basic administrative tasks, here is how to manage PPA repositories in their Debian system.
+
+To open the command line Terminal, go to the Activities tab in the top left corner of your desktop. Then in the search bar, type the keyword terminal. When the search result appears, click on the Terminal icon to open it.
+
+List Added PPA Repositories
+In order to view all the available repositories on your system, execute this command in Terminal:
+
+$ apt policy
+List PPA Repositories on Debian
+
+An alternative way to view the list of repositories is by printing the contents of /etc/apt/sources.list.d. To do so, run the following command in terminal:
+
+
+$ ls /etc/apt/sources.list.d
+This command will list all repositories that are available on your system.
+
+List Debian repository include files
+
+Add a PPA Repository
+Only an authorized user can manage repositories on a Linux system. Use the following syntax in order to add a PPA repository in the system.
+
+$ add-apt-repository ppa:ppa_name
+

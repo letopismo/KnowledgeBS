@@ -1,0 +1,17 @@
+ warning: variable `guessToInt` should have a snake case name
+  --> src/main.rs:17:9
+   |
+17 |     let guessToInt = guess.parse::<i32>().unwrap();
+   |         ^^^^^^^^^^ help: convert the identifier to snake case: `guess_to_int`
+   |
+   = note: `#[warn(non_snake_case)]` on by default
+
+warning: `guessing_game` (bin "guessing_game") generated 2 warnings
+    Finished dev [unoptimized + debuginfo] target(s) in 0.34s
+
+Question:
+You can turn it off by including this line in your file. Check out this thread
+
+#![allow(non_snake_case)]
+
+ref: https://stackoverflow.com/questions/24102325

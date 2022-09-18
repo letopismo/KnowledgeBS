@@ -1,0 +1,17 @@
+If I had checked the type of "hello world" with gdb's ptype command, I would have noticed that it's an object and not a number or a pointer.
+
+(gdb) ptype "hello world"
+type = struct &str {
+  data_ptr: u8 *,
+  length: usize,
+}
+To resolve this, change the argument to the string's property called data_ptr.
+
+(gdb) ptype "hello world".data_ptr
+type = u8 *
+
+(gdb) p "hello world".data_ptr
+$14 = (u8 *) 0x101100080 "hello world\000"
+
+https://sourceware.org/gdb/onlinedocs/gdb/Output.html
+https://stackoverflow.com/questions/43600685

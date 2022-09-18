@@ -1,0 +1,10 @@
+$ apt install package
+dpkg: error processing archive /home/alexor2/Downloads/nvim-linux64.deb (--unpack):
+ trying to overwrite '/usr/share/applications/nvim.desktop', which is also in package neovim-runtime 0.3.4-3
+dpkg-deb: error: paste subprocess was killed by signal (Broken pipe)
+Errors were encountered while processing:
+
+
+Answer:
+sudo apt-get --fix-broken install
+ref: https://askubuntu.com/questions/176121
