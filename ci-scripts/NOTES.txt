@@ -29,8 +29,8 @@ systemctl --user status push2git.service
 
 systemctl --user start push2git.service --now
 
-
-journalctl -u --user push2git
+journalctl --user push2git
 
 systemctl --user enable push2git.service
 
+See "systemctl --user status push2git.service" and "journalctl --user -xeu push2git.service" for details.

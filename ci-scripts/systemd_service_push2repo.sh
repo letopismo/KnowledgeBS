@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eu
 
-if [ -z "$SSH_AUTH_SOCK" ] ; then
+if [[ -z  ${SSH_AUTH_SOCK:=} ]] ; then
   eval `ssh-agent -s`
 fi
 

@@ -1,0 +1,28 @@
+This is almost exactly the same as What do I select for “GRUB install devices” after an update? - or perhaps it isn't, hence asking, as I'm running Ubuntu on a Virtualbox machine via Vagrant.
+
+I was unable to update packages, so I ran sudo apt-get update then sudo apt-get dist-upgrade. It appeared with the following message:
+
+The GRUB boot loader was previously installed to a disk that is no longer present, or whose unique identifier has changed for some reason. It is        │ 
+ │ important to make sure that the installed GRUB core image stays in sync with GRUB modules and grub.cfg. Please check again to make sure that GRUB is    │ 
+ │ written to the appropriate boot devices.                                                                                                                │ 
+ │                                                                                                                                                         │ 
+ │ If you're unsure which drive is designated as boot drive by your BIOS, it is often a good idea to install GRUB to all of them.                          │ 
+ │                                                                                                                                                         │ 
+ │ Note: it is possible to install GRUB to partition boot records as well, and some appropriate partitions are offered here. However, this forces GRUB to  │ 
+ │ use the blocklist mechanism, which makes it less reliable, and therefore is not recommended.                                                            │ 
+ │                                                                                                                                                         │ 
+ │ GRUB install devices:                                                                                                                                   │ 
+ │                                                                                                                                                         │ 
+ │    [ ] /dev/sda (85899 MB; VBOX_HARDDISK)                                                                                                               │ 
+ │    [ ] - /dev/sda1 (254 MB; /boot)                                                                                                                      │ 
+ │    [ ] /dev/dm-0 (84833 MB; precise64-root) 
+
+Assuming you're not using UEFI, and I see no reason as to why you should be. Also assuming you didn't set it up in some fancy pancy way originally, then yes, the first option is the correct one. By selecting /dev/sda it will be installed to the MBR of /dev/sda, which a BIOS should be able to boot.
+
+Anser:
+I've had this come up recently with my vagrant box, but selecting that option then informed me that I apparently chose not to install GRUB to any disk. I could tell the install process I didn't want to go through without installing GRUB, but then I got bumped back to the 'select a disk' screen mentioned in the original post. Took me too long to realise I was supposed to use the spacebar to select/asterisk the selection before going on.. So if anyone else is having this issue, this is probably why you're seeing that notification. /supersmartuser.
+
+ou have to press the space bar to actually select the item. When it's selected, you'll see an * asterisk appear in the box. Then hit "enter" and it will start installing.
+
+ref: https://askubuntu.com/questions/560685
+ 
