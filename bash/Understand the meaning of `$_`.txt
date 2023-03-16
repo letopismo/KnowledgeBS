@@ -1,0 +1,30 @@
+ 
+$ mkdir -p /tmp/opt && echo  $_/shutdown.log                                                              1 ✘
+/tmp/opt/shutdown.log
+
+ref: https://unix.stackexchange.com/questions/280453
+
+It is first arg of prev command
+
+
+    if the _ variable was in the environment that bash received, then bash leaves it untouched.
+
+    In particular, if that bash shell was invoked by another bash shell (though zsh, yash and some ksh implementations also do it), then that bash shell will have set the _ environment variable to the path of the command being executed (that's the 3rd point in your question). For instance, if bash is invoked to interpret a script as a result of another bash shell interpreting:
+
+    bash-script some args
+
+    That bash will have passed _=/path/to/bash-scrip in the environment given to bash-script, and that's what the initial value of the $_ bash variable will be in the bash shell that interprets that script.
+
+    $ env -i _=whatever bash -c 'echo "$_"'
+    whatever
+
+    Now, if the invoking application doesn't pass a _ environment variable, the invoked bash shell will initialise $_ to the argv[0] it receives itself which could be bash, or /path/to/bash or /path/to/some-script or anything else (in the example above, that would be /bin/bash if the she-bang of the script was #! /bin/bash or /path/to/bash-script depending on the system).
+
+    So that text is misleading as it describes the behaviour of the caller which bash has no control over. The application that invoked bash may very well not set $_ at all (in practice, only some shells and a few rare interactive applications do, execlp() doesn't for instance), or it could use it for something completely different (for instance ksh93 sets it to *pid*/path/to/command).
+
+    $ env bash -c 'echo "$_"'
+    /usr/bin/env   (env did not set it to /bin/bash, so the value we
+                   get is the one passed to env by my interactive shell)
+    $ ksh93 -c 'bash -c "echo \$_"'
+    *20042*/bin/bash
+
