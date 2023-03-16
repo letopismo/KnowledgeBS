@@ -1,0 +1,15 @@
+
+
+$XDG_DATA_HOME defines the base directory relative to which user-specific data files should be stored. If $XDG_DATA_HOME is either not set or empty, a default equal to $HOME/.local/share should be used.
+
+example:
+
+    Application data files, such as databases, configuration files, and user preferences
+    Media files, such as images, videos, and audio recordings
+    Document files, such as text documents, spreadsheets, and presentations
+    Data files created by scripts or other custom applications
+
+ref:
+
+https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
+https://wiki.archlinux.org/title/XDG_Base_Directory

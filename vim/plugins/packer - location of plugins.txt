@@ -1,0 +1,7 @@
+packer - location of plugins
+
+
+To see your plugins go to ~/.local/share/nvim/site/pack/packer/
+and from here either opt or start
+
+ref: https://www.chiarulli.me/Neovim-2/03-plugins/

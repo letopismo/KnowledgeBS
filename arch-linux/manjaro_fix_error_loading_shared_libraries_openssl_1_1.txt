@@ -1,0 +1,14 @@
+
+
+ref: https://wiki.archlinux.org/title/Pacman#%22Cannot_open_shared_object_file%22_error
+ref: https://wiki.manjaro.org/index.php/GRUB/Restore_the_GRUB_Bootloader
+
+sudo su
+mkdir /mnt/old_home
+mount /dev/sda3 /mnt/old_home
+ cp /home/manjaro/Downloads/usr/lib/libssl.so.1.1  /mnt/home/alexor2/Downloads
+ cp /home/manjaro/Downloads/usr/lib/libcrypto.so.1.1 /mnt/home/alexor2/Downloads
+
+root # manjaro-chroot -a
+cp /home/alexor2/Downloads/lib*.so.1.1 /usr/lib
+pacman -U --overwrite '/usr/lib' /home/alexor2/Downloads/openssl-1.1-1.1.1.t-1-x86_64.pkg.tar.zst

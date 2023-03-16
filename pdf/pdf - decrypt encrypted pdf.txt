@@ -1,0 +1,20 @@
+qpdf --password=YOURPASSWORD-HERE --decrypt input.pdf output.pdf
+
+or
+ qpdf --password=$MYPASS --decrypt 'Oprocentowanie Twoich kredytów.pdf'  out.pdf
+
+qpdf --decrypt in.pdf out.pdf
+
+And that’s it, no password required. After that, the PDF file can be opened in Evince and Okular and has no restrictions on what can be done with it, including printing it, modifying it, etc.
+
+Qpdf also has a command line option to show which actions are ‘not allowed’ when an empty owner is set password:
+
+qpdf --show-encryption in.pdf
+
+R = 6
+P = -1084
+User password =
+extract for accessibility: allowed
+
+ref: https://blog.wirelessmoves.com/2019/12/how-to-open-protected-pdfs-on-linux.html
+ref: https://www.cyberciti.biz/faq/removing-password-from-pdf-on-linux/

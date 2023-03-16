@@ -1,0 +1,16 @@
+https://stackoverflow.com/questions/33173266/
+
+Like I commented in https://stackoverflow.com/a/43303222/4196440, we can just use Zip::File.open_buffer:
+
+require 'open-uri'
+
+content = open('http://localhost:3000/foobar.zip')
+
+Zip::File.open_buffer(content) do |zip|
+  zip.each do |entry|
+    puts entry.name
+    # Do whatever you want with the content files.
+  end
+end
+
+

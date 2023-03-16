@@ -1,0 +1,7 @@
+ref: https://stackoverflow.com/questions/9193066/how-do-i-inspect-vim-variables
+:help g:go_debug
+
+go_def_mode='gopls'
+let g:go_info_mode='gopls'
+# inspect vars
+:echo g:SuperTabDefaultCompletionType

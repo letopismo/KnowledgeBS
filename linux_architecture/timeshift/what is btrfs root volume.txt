@@ -1,0 +1,85 @@
+https://bbs.archlinux.org/viewtopic.php?id=265643
+https://btrfs.wiki.kernel.org/index.php/SysadminGuide
+
+If you want to use Timeshift it's important to note that it requires "an Ubuntu-type subvolume layout (with @ and @home subvolumes)."
+
+You don't need to reinstall your system. Let's assume that your BTRFS root partition is /dev/sda2. In order to create a @ subvolume and several other subvolumes the following procedure should work:
+
+sudo mount /dev/sda2 /mnt
+sudo btrfs sub create /mnt/@
+sudo btrfs sub create /mnt/@home
+sudo btrfs sub create /mnt/@cache
+sudo btrfs sub create /mnt/@log
+sudo btrfs sub create /mnt/@tmp
+
+... whatever ..
+
+sudo umount /mnt
+
+Then add the following entries to your fstab:
+
+UUID=xyz /              btrfs   subvol=@,defaults,noatime,space_cache,autodefrag,compress=zstd 0 1
+UUID=xyz /home          btrfs   subvol=@home,defaults,noatime,space_cache,autodefrag,compress=zstd 0 2
+UUID=xyz /var/cache     btrfs   subvol=@cache,defaults,noatime,space_cache,autodefrag,compress=zstd 0 2
+UUID=xyz /var/log       btrfs   subvol=@log,defaults,noatime,space_cache,autodefrag,compress=zstd 0 2
+UUID=xyz /var/tmp       btrfs   subvol=@tmp,defaults,noatime,space_cache,autodefrag,compress=zstd 0 2
+
+Needless to say, that you should replace xyz with your real UUID for your BTRFS partition which you can find with sudo blkid.
+
+Execute sudo mount -a and sudo btrfs sub list / which displays your new subvolumes.
+
+Yes it is. But you need to know what you are doing. The gist of it is as follows:
+
+Boot a rescue or live CD with linux. Mount your btrfs volume. Create a writeable snapshot of your mounted root volume. Something like: btrfs sub snap /mnt/Mounted-BTRFS-Volume /mnt/Mounted-BTRFS-Volume/root
+
+then create a dir where to mount the subvolume into. e.g. /mnt/root and mount it using the -o subvolume=root option. Chroot into it. Then adapt you fstab and grub config to point the subvolume and not the toplevel volume. Finally you will probably need to update your initramfs and grub config. Then reboot. Once you've rebooted, you need to verify that you're system actually mounted the subvolume as your rootfs. Then you can mount the top level volume to /mnt/TopLevelVolume and delete everything inside there, apart from the "root" subvolume"
+
+Then run the initramfs update and grub config update just for good measure, reboot. And that should be it.
+
+I probably listed a few extra steps that are unecessary, but that's the general gist of it.
+
+ref:
+
+Chris Murphy
+May 2021
+
+Instead of changing the subvolume’s name in the installer, I recommend changing it post-install. There’s a bug if you rename the / subvolume (it’s not a bad bug but …)
+
+https://bugzilla.redhat.com/show_bug.cgi?id=1952764 40
+
+You need to identify which /dev/ node and partition has the btrfs filesystem used for / and /home and mount its top-level so you can rename the subvolumes:
+
+lsblk -f
+mount /dev/sdXY /mnt
+cd /mnt
+mv root @
+mv home @home
+nano /etc/fstab
+
+In nano:
+
+    Change subvol=root to subvol=@ for the / mount point.
+    Change subvol=home to subvol=@home for the /home mount point.
+
+Next change each /boot/loader/entries/*conf file’s rootflags=subvol=root to rootlfags=subvol=@ I think it’s easier to just use nano to it in this case, one by one; OR…
+
+It is possible to use grubby to change the BLS drop-in files in /boot/loader/entries instead, which is ordinarily the preferred way, but in this case it involves some extra steps than just using nano or vim.
+
+grubby --remove-arg="rootflags=subvol=root" --update-kernel=ALL
+grubby --arg="rootflags=subvol=@" --update-kernel=ALL
+nano /etc/default/grub
+
+Remove rootflags=subvol=@ from the /etc/default/grub file - it’s here because of the update-kernel=ALL flag above, but grub has its own way of adding it.
+
+ref: https://forum.manjaro.org/t/btrfs-system-disk-wont-work-with-timeshift/51787/2
+
+Timeshift supports BTRFS snapshots, but not backups. A snapshot is taken from the selected BTRFS partition into this partition, not across different partition. In your setup second is the case. I think your system is on another BTRFS partition as your 1TB BTRFS partition on sdb3. If you want to backup BTRFS snapshots then you have to use the combination of btrfs send | btrfs receive. BTRFS it self contains anything to take snapshots and backups to external storages. But Timeshift does’nt support it with BTRFS. Strongly speaking: Timeshift don’t support BTRFS backups, only snapshots on the same partition, and that’s not a real backup. And second: the btrfs snapshots taken with Timeshift are writeable snapshots to my knowledge, that’s a realy bad idea of a snapshot.
+Thus i suggest to use another toolchain for btrfs snapshots and backups. Take a look onto follow combination:
+
+    Snapper + Snapper GUI to take ro-snapshots, with automated cleanup algorithms
+    snap-pac to automatically make snapshots with Snapper before and after installation of packages from repository and AUR
+    grub-btrfs to automatically update GRUB with boot menuentries to boot into Snapper ro-snapshots
+    snap-sync to automatically make differential backups of Snapper snapshots to external btrfs formated storages, through ssh-tunnels.
+    right setup of BTRFS to support UEFI, root snapshots with included kernel + library (/var/lib) snapshots, bootable ro-snapshots of the entire system into DE/GUI.
+
+I use above combination on 5 machines running Manjaro. One of them have attached a USB3 SATA SSD which holds the btrfs backup partition. Daily differential full system backups with SSH tunnels take about 5-10 seconds, and that’s the advantage of btrfs, if correctly used.

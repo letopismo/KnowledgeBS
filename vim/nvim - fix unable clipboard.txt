@@ -1,0 +1,35 @@
+nvim fix unable clipboard
+
+CTRL +SHIFT + C does not copy to systemclibarod
+
+check:
+nvim --version
+
+:help clipboard
+:echo has('clipboard')
+1
+
+:echo has('unnamedplus')
+0
+
+so I check that native integration with systemclipboard exist
+
+$ nvim -v                                                                                                                                         ✔  9s 
+NVIM v0.8.0-1210-gd367ed9b2
+Build type: Release
+LuaJIT 2.1.0-beta3
+Compiled by runner@fv-az505-656
+
+Features: +acl +iconv +tui
+
+no it is not
+
+so I am settion
+
+sudo pacman -S xclip
+trying xclip and DISPLAY=":.0:0"
+
+
+:0.0 means that we are talking about the first screen attached to your first display in your local host
+
+ref: https://askubuntu.com/questions/432255/what-is-the-display-environment-variable

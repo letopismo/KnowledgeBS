@@ -1,0 +1,14 @@
+
+~/.local/bin
+
+This is defined in systemd's standard which has the following to say about the directory's contents:
+
+    Executables that shall appear in the user's $PATH search path. It is recommended not to place executables in this directory that are not useful for invocation from a shell; these should be placed in a subdirectory of ~/.local/lib/ instead. Care should be taken when placing architecture-dependent binaries in this place, which might be problematic if the home directory is shared between multiple hosts with different architectures.
+
+Depending on your distribution, you might have to add the directory to your path by putting this in your ~/.bashrc:
+
+PATH=$PATH:~/.local/bin
+
+See also: Which distributions have $HOME/.local/bin in $PATH?
+
+ref: https://unix.stackexchange.com/questions/127076
