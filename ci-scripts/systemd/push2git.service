@@ -6,7 +6,7 @@ Before=shutdown.target
 
 [Service]
 Type=oneshot
-ExecStart=/home/alexor2/Documents/KnowledgeBS/ci-scripts/systemd_service_push2repo.sh
+ExecStop=/home/alexor2/Documents/KnowledgeBS/ci-scripts/systemd_service_push2repo.sh
 TimeoutStartSec=0
 RemainAfterExit=yes
 
